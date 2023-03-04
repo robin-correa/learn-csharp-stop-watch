@@ -8,52 +8,47 @@ class Program
 
         for (var i = 0; i < 2; i++)
         {
-            for (var j = 0; j <= 1000; j++)
-            {
-                Thread.Sleep(1);
-            }
+            stopwatch.Start();
+            Thread.Sleep(1000);
+            stopwatch.Stop();
+
+            Console.WriteLine("Duration: " + stopwatch.GetInterval());
+            Console.WriteLine("Press Enter to run the stopwatch one more time.");
+            Console.ReadLine();
         }
-
-        stopwatch.Start(DateTime.Now);
-        stopwatch.Stop(DateTime.Now);
-
-        Console.WriteLine(stopwatch.GetInterval().ToString());
-        Console.ReadLine();
     }
 }
 
 public class StopWatch
 {
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
+    private DateTime _startTime;
+    private DateTime _endTime;
 
-    private bool running = false;
+    private bool _running;
 
-    public void Start(DateTime start)
+    public void Start()
     {
-        if (!running)
+        if (_running)
         {
-            StartTime = start;
-            running = true;
+            throw new InvalidOperationException("Stop watch is already _running");
         }
-        else
-        {
-            throw new InvalidOperationException("Stop watch is already running");
-        }
+
+        _startTime = DateTime.Now;
+        _running = true;
     }
 
-    public void Stop(DateTime stop)
+    public void Stop()
     {
-        if (running)
+        if (!_running)
         {
-            EndTime = stop;
-            running = false;
+            throw new InvalidOperationException("Stop watch is already _running");
         }
+        _endTime = DateTime.Now;
+        _running = false;
     }
 
     public TimeSpan GetInterval()
     {
-        var duration = EndTime - StartTime;
-        return duration;
+        return _endTime - _startTime;
     }
 }
